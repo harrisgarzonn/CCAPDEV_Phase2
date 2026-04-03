@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><%= user.username %> - Profile</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/profile.css">
+</head>
+<body>
+    <div class="bg-wallpaper light-theme" style="background-image: url('/assets/light-background.png');"></div>
+    <div class="bg-wallpaper dark-theme" style="background-image: url('/assets/dark-background.png');"></div>
+
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="nav-left">
+                <img src="/assets/logo.png" alt="Logo" class="logo-img">
+                <h1 class="site-title">Community Portal</h1>
+            </div>
+            <div class="nav-center">
+                <div class="search-wrapper">
+                    <form method="GET" action="/" style="display: flex; width: 100%; gap: 0;">
+                        <input type="text" id="searchBar" name="search" placeholder="🔍 Search establishments..." class="search-input">
+                        <button type="submit" class="search-btn">Search</button>
+                    </form>
+                </div>
+            </div>
+            <div class="nav-right">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/profile" class="nav-link">Profile</a>
+                <a href="/auth/logout" class="nav-link-btn login-btn">Logout</a>
+                <button class="icon-btn" id="musicToggle" title="Toggle Music">
+                    <img src="/assets/music-icon.png" alt="Music" class="icon-img">
+                </button>
+                <button class="icon-btn" id="darkModeToggle" title="Toggle Dark Mode">
+                    <img src="/assets/lightbulb-icon.png" alt="Dark Mode" class="icon-img">
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <audio id="bgMusic" loop>
+        <source src="/assets/background-music.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="clickSound">
+        <source src="/assets/click-sound.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="successSound">
+        <source src="/assets/success-sound.mp3" type="audio/mpeg">
+    </audio>
+
+    <main class="profile-page">
+        <section class="profile-header-section">
+            <div class="profile-banner">
+                <img src="/assets/profile-banner.jpg" alt="Banner" class="banner-img">
+            </div>
+            <div class="profile-info-card">
+                <img src="/assets/default-avatar.jpg" alt="Avatar" class="profile-pic-large">
+                <div class="profile-details">
+                    <h1 class="profile-username"><%= user.username %></h1>
+                    <p class="profile-bio"><%= user.description || 'A community reviewer' %></p>
+                    <div class="profile-stats">
+                        <div class="stat"><span class="stat-num"><%= reviews.length %></span><span class="stat-label">Reviews</span></div>
+                        <div class="stat"><span class="stat-num"><%= totalHelpful %></span><span class="stat-label">Helpful Votes</span></div>
+                    </div>
+                    <a href="/profile/edit" style="display: inline-block; margin-top: 15px; padding: 10px 20px; background: #FF66BC; color: white; text-decoration: none; border-radius: 20px; font-weight: 600;">Edit Profile</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="profile-reviews-section">
+            <h2 class="section-heading">Your Reviews</h2>
+            
+            <% if (reviews.length === 0) { %>
+                <div style="text-align: center; padding: 40px; background: white; border-radius: 16px;">
+                    <p style="font-size: 1.2rem; color: #999;">You haven't written any reviews yet.</p>
+                    <a href="/reviews/create" style="display: inline-block; margin-top: 20px; padding: 10px 20px; background: #FF66BC; color: white; text-decoration: none; border-radius: 20px; font-weight: 600;">Write Your First Review</a>
+                </div>
+            <% } else { %>
+                <% reviews.forEach(review => { %>
+                    <div class="review-card-mini" style="background: white; padding: 20px; border-radius: 16px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(255,102,188,0.15);">
+                        <div class="review-mini-header" style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <h4 style="color: #FF66BC; font-size: 1.2rem;"><%= review.title %></h4>
+                            <div class="rating-mini" style="color: #FFD700;">
+                                <% for (let i = 0; i < review.rating; i++) { %>★<% } %><% for (let i = review.rating; i < 5; i++) { %>☆<% } %>
+                            </div>
+                        </div>
+                        <p class="review-mini-text" style="color: #555; line-height: 1.6; margin-bottom: 10px;"><%= review.body.substring(0, 150) %>...</p>
+                        <p class="review-mini-meta" style="color: #999; font-size: 0.9rem;">For: <a href="/establishments/<%= review.establishment_id %>" style="color: #FF66BC; text-decoration: none;"><%= review.establishment_name %></a> • <%= review.helpful_count %> found helpful</p>
+                        <div style="margin-top: 10px; display: flex; gap: 10px;">
+                            <a href="/reviews/<%= review.id %>/edit" style="padding: 8px 16px; border-radius: 20px; border: 2px solid #FF66BC; background: white; color: #FF66BC; text-decoration: none; cursor: pointer; font-size: 0.9rem;">Edit</a>
+                            <form method="POST" action="/reviews/<%= review.id %>?_method=DELETE" style="display: inline;">
+                                <button type="submit" style="padding: 8px 16px; border-radius: 20px; border: 2px solid #cc0000; background: white; color: #cc0000; cursor: pointer; font-size: 0.9rem;">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                <% }); %>
+            <% } %>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>© 2026 Community Insight Portal. All rights reserved (Hypothetically). Made with Love and Effort 💖—by Group 11 for CCAPDEV</p>
+    </footer>
+
+    <script src="/js/script.js"></script>
+</body>
+</html>

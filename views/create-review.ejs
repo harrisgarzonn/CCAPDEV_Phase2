@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Write a Review - Community Insight Portal</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/forms.css">
+</head>
+<body>
+    <div class="bg-wallpaper light-theme" style="background-image: url('/assets/light-background.png');"></div>
+    <div class="bg-wallpaper dark-theme" style="background-image: url('/assets/dark-background.png');"></div>
+
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="nav-left">
+                <img src="/assets/logo.png" alt="Logo" class="logo-img">
+                <h1 class="site-title">Community Portal</h1>
+            </div>
+            <div class="nav-center">
+                <div class="search-wrapper">
+                    <form method="GET" action="/" style="display: flex; width: 100%; gap: 0;">
+                        <input type="text" id="searchBar" name="search" placeholder="🔍 Search establishments..." class="search-input">
+                        <button type="submit" class="search-btn">Search</button>
+                    </form>
+                </div>
+            </div>
+            <div class="nav-right">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/profile" class="nav-link">Profile</a>
+                <a href="/auth/logout" class="nav-link-btn login-btn">Logout</a>
+                <button class="icon-btn" id="musicToggle" title="Toggle Music">
+                    <img src="/assets/music-icon.png" alt="Music" class="icon-img">
+                </button>
+                <button class="icon-btn" id="darkModeToggle" title="Toggle Dark Mode">
+                    <img src="/assets/lightbulb-icon.png" alt="Dark Mode" class="icon-img">
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <audio id="bgMusic" loop>
+        <source src="/assets/background-music.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="clickSound">
+        <source src="/assets/click-sound.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="successSound">
+        <source src="/assets/success-sound.mp3" type="audio/mpeg">
+    </audio>
+
+    <main class="form-page">
+        <div class="form-container review-form">
+            <h2 class="form-title">Share Your Experience ✨</h2>
+            <p class="form-subtitle">Your review helps others make better decisions!</p>
+            
+            <form action="/reviews" method="POST" class="review-form-content">
+                <div class="form-group">
+                    <label for="establishment">Establishment Name</label>
+                    <input type="text" id="establishment" name="establishment" required placeholder="Type the establishment name (e.g., 'Jollibee Taft')" maxlength="100">
+                    <small class="form-hint">Type the establishment name. If it's new, it will be added to the homepage!</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="category">Category</label>
+                    <select id="category" name="category" required>
+                        <option value="">Choose a category...</option>
+                        <option value="restaurant">🍔 Restaurant</option>
+                        <option value="store">🛍️ Store</option>
+                        <option value="service">⚙️ Service</option>
+                    </select>
+                    <small class="form-hint">Select what type of establishment this is</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="rating">Your Rating ⭐</label>
+                    <select id="rating" name="rating" required class="rating-select">
+                        <option value="">Choose your rating...</option>
+                        <option value="5">★★★★★ (5 stars - Excellent!)</option>
+                        <option value="4">★★★★☆ (4 stars - Very Good)</option>
+                        <option value="3">★★★☆☆ (3 stars - Good)</option>
+                        <option value="2">★★☆☆☆ (2 stars - Fair)</option>
+                        <option value="1">★☆☆☆☆ (1 star - Poor)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="title">Review Title</label>
+                    <input type="text" id="title" name="title" required placeholder="Summarize your experience..." maxlength="100">
+                    <small class="form-hint">Keep it short and catchy!</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="body">Your Review</label>
+                    <textarea id="body" name="body" required placeholder="Share your detailed experience here..." rows="8"></textarea>
+                    <small class="form-hint">Be specific and honest - your review helps the community!</small>
+                </div>
+
+                <button type="submit" class="submit-btn">Submit Review ✨</button>
+            </form>
+
+            <p class="form-footer">
+                <a href="/" class="form-link">Back to Home</a>
+            </p>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>© 2026 Community Insight Portal. All rights reserved (Hypothetically). Made with Love and Effort 💖—by Group 11 for CCAPDEV</p>
+    </footer>
+
+    <script src="/js/script.js"></script>
+</body>
+</html>

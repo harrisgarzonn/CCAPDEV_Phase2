@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Community Insight Portal</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/forms.css">
+</head>
+<body>
+    <div class="bg-wallpaper light-theme" style="background-image: url('/assets/light-background.png');"></div>
+    <div class="bg-wallpaper dark-theme" style="background-image: url('/assets/dark-background.png');"></div>
+
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="nav-left">
+                <img src="/assets/logo.png" alt="Logo" class="logo-img">
+                <h1 class="site-title">Community Portal</h1>
+            </div>
+            <div class="nav-center">
+                <div class="search-wrapper">
+                    <input type="text" placeholder="🔍 Search establishments..." class="search-input">
+                    <button class="search-btn">Search</button>
+                </div>
+            </div>
+            <div class="nav-right">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/auth/login" class="nav-link-btn login-btn">Login</a>
+                <a href="/auth/register" class="nav-link-btn signup-btn">Sign Up</a>
+                <button class="icon-btn" id="musicToggle" title="Toggle Music">
+                    <img src="/assets/music-icon.png" alt="Music" class="icon-img">
+                </button>
+                <button class="icon-btn" id="darkModeToggle" title="Toggle Dark Mode">
+                    <img src="/assets/lightbulb-icon.png" alt="Dark Mode" class="icon-img">
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <audio id="bgMusic" loop>
+        <source src="/assets/background-music.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="clickSound">
+        <source src="/assets/click-sound.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="successSound">
+        <source src="/assets/success-sound.mp3" type="audio/mpeg">
+    </audio>
+
+    <main class="form-page">
+        <div class="form-container">
+            <h2 class="form-title">Welcome Back 💖</h2>
+            <p class="form-subtitle">Login to your account and continue sharing your experiences!</p>
+            
+            <% if (typeof error !== 'undefined') { %>
+                <div style="background: #ffcccc; color: #cc0000; padding: 12px; border-radius: 8px; margin-bottom: 20px;">
+                    <%= error %>
+                </div>
+            <% } %>
+
+            <form action="/auth/login" method="POST" class="auth-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required placeholder="Enter your username">
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required placeholder="Enter your password">
+                </div>
+
+                <button type="submit" class="submit-btn">Login ✨</button>
+            </form>
+
+            <p class="form-footer">
+                Don't have an account? <a href="/auth/register" class="form-link">Sign up here</a>
+            </p>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>© 2026 Community Insight Portal. All rights reserved (Hypothetically). Made with Love and Effort 💖—by Group 11 for CCAPDEV</p>
+    </footer>
+
+    <script src="/js/script.js"></script>
+</body>
+</html>

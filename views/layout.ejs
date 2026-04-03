@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= typeof title !== 'undefined' ? title : 'Community Insight Portal' %></title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <% if (typeof stylesheet !== 'undefined') { %>
+        <link rel="stylesheet" href="/css/<%= stylesheet %>">
+    <% } %>
+</head>
+<body>
+    <div class="bg-wallpaper light-theme" style="background-image: url('/assets/light-background.png');"></div>
+    <div class="bg-wallpaper dark-theme" style="background-image: url('/assets/dark-background.png');"></div>
+
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="nav-left">
+                <img src="/assets/logo.png" alt="Logo" class="logo-img">
+                <h1 class="site-title">Community Portal</h1>
+            </div>
+            <div class="nav-center">
+                <div class="search-wrapper">
+                    <form method="GET" action="/" style="display: flex; width: 100%; gap: 0;">
+                        <input type="text" id="searchBar" name="search" placeholder="🔍 Search establishments..." class="search-input" value="<%= search || '' %>">
+                        <button type="submit" class="search-btn" id="searchBtn">Search</button>
+                    </form>
+                </div>
+            </div>
+            <div class="nav-right">
+    <a href="/" class="nav-link">Home</a>
+    <% if (currentUser) { %>
+        <a href="/profile" class="nav-link">Profile</a>
+        <a href="/auth/logout" class="nav-link-btn login-btn">Logout</a>
+    <% } else { %>
+        <a href="/auth/login" class="nav-link-btn login-btn">Login</a>
+        <a href="/auth/register" class="nav-link-btn signup-btn">Sign Up</a>
+    <% } %>
+                <button class="icon-btn" id="musicToggle" title="Toggle Music">
+                    <img src="/assets/music-icon.png" alt="Music" class="icon-img">
+                </button>
+                <button class="icon-btn" id="darkModeToggle" title="Toggle Dark Mode">
+                    <img src="/assets/lightbulb-icon.png" alt="Dark Mode" class="icon-img">
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <audio id="bgMusic" loop>
+        <source src="/assets/background-music.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="clickSound">
+        <source src="/assets/click-sound.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="successSound">
+        <source src="/assets/success-sound.mp3" type="audio/mpeg">
+    </audio>
+
+    <main>
+        <%- body %>
+    </main>
+
+    <footer class="footer">
+        <p>© 2026 Community Insight Portal. All rights reserved (Hypothetically). Made with Love and Effort 💖—by Group 11 for CCAPDEV</p>
+    </footer>
+
+    <script src="/js/script.js"></script>
+</body>
+</html>
