@@ -1,9 +1,10 @@
 const { Pool } = require('pg');
 
-// Use connection string from environment variable
+// Force IPv4 by setting family: 4
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false } // Required for Supabase
+  ssl: { rejectUnauthorized: false },
+  family: 4  // This forces IPv4 instead of IPv6
 });
 
 // Helper functions to match the old SQLite style
@@ -27,40 +28,44 @@ const db = {
 
 // Initialize tables (run once)
 async function initializeDatabase() {
-  await pool.query(`
-    CREATE TABLE IF NOT EXISTS users (
-      id SERIAL PRIMARY KEY,
-      username TEXT UNIQUE NOT NULL,
-      password TEXT NOT NULL,
-      description TEXT,
-      created_at TIMESTAMP DEFAULT NOW()
-    )
-  `);
-  await pool.query(`
-    CREATE TABLE IF NOT EXISTS establishments (
-      id SERIAL PRIMARY KEY,
-      name TEXT NOT NULL,
-      address TEXT,
-      category TEXT,
-      description TEXT,
-      rating REAL,
-      created_at TIMESTAMP DEFAULT NOW()
-    )
-  `);
-  await pool.query(`
-    CREATE TABLE IF NOT EXISTS reviews (
-      id SERIAL PRIMARY KEY,
-      user_id INTEGER REFERENCES users(id),
-      establishment_id INTEGER REFERENCES establishments(id),
-      rating INTEGER NOT NULL,
-      title TEXT,
-      body TEXT,
-      helpful_count INTEGER DEFAULT 0,
-      unhelpful_count INTEGER DEFAULT 0,
-      created_at TIMESTAMP DEFAULT NOW()
-    )
-  `);
-  console.log('✅ Supabase tables ready');
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS users (
+        id SERIAL PRIMARY KEY,
+        username TEXT UNIQUE NOT NULL,
+        password TEXT NOT NULL,
+        description TEXT,
+        created_at TIMESTAMP DEFAULT NOW()
+      )
+    `);
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS establishments (
+        id SERIAL PRIMARY KEY,
+        name TEXT NOT NULL,
+        address TEXT,
+        category TEXT,
+        description TEXT,
+        rating REAL,
+        created_at TIMESTAMP DEFAULT NOW()
+      )
+    `);
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS reviews (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER REFERENCES users(id),
+        establishment_id INTEGER REFERENCES establishments(id),
+        rating INTEGER NOT NULL,
+        title TEXT,
+        body TEXT,
+        helpful_count INTEGER DEFAULT 0,
+        unhelpful_count INTEGER DEFAULT 0,
+        created_at TIMESTAMP DEFAULT NOW()
+      )
+    `);
+    console.log('✅ Supabase tables ready');
+  } catch (err) {
+    console.error('Error initializing database:', err.message);
+  }
 }
 
 module.exports = { db, initializeDatabase, pool };
