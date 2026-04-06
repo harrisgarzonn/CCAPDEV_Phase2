@@ -1,34 +1,43 @@
 const { Pool } = require('pg');
+const dns = require('dns');
 
-// Force IPv4 by setting family: 4
+// Force DNS resolution to use IPv4
+dns.setDefaultResultOrder('ipv4first');
+
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false },
-  family: 4  // This forces IPv4 instead of IPv6
+  ssl: { 
+    rejectUnauthorized: false,
+    require: true
+  },
+  // Force IPv4 connection
+  family: 4,
+  connectionTimeoutMillis: 10000,
+  keepAlive: true
 });
 
-// Helper functions to match the old SQLite style
+// Helper functions
 const db = {
-  // For SELECT queries that return rows
   get: async (sql, params) => {
     const result = await pool.query(sql, params);
     return result.rows[0];
   },
-  // For SELECT that returns multiple rows
   all: async (sql, params) => {
     const result = await pool.query(sql, params);
     return result.rows;
   },
-  // For INSERT/UPDATE/DELETE
   run: async (sql, params) => {
     const result = await pool.query(sql, params);
     return { lastID: result.rows[0]?.id || null };
   }
 };
 
-// Initialize tables (run once)
 async function initializeDatabase() {
   try {
+    // Test connection first
+    await pool.query('SELECT 1');
+    console.log('✅ Supabase connected successfully');
+
     await pool.query(`
       CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
@@ -63,8 +72,28 @@ async function initializeDatabase() {
       )
     `);
     console.log('✅ Supabase tables ready');
+
+    // Insert sample data if tables are empty
+    const userCount = await pool.query('SELECT COUNT(*) FROM users');
+    if (parseInt(userCount.rows[0].count) === 0) {
+      console.log('📝 Inserting sample data...');
+      const bcrypt = require('bcrypt');
+      const sampleUsers = [
+        { username: 'john_doe', password: 'password123', description: 'Local resident' },
+        { username: 'jane_smith', password: 'password123', description: 'Business owner' },
+        { username: 'mike_wilson', password: 'password123', description: 'Community organizer' }
+      ];
+      for (const user of sampleUsers) {
+        const hashedPassword = await bcrypt.hash(user.password, 10);
+        await pool.query(
+          'INSERT INTO users (username, password, description) VALUES ($1, $2, $3) ON CONFLICT (username) DO NOTHING',
+          [user.username, hashedPassword, user.description]
+        );
+      }
+      console.log('✅ Sample users inserted');
+    }
   } catch (err) {
-    console.error('Error initializing database:', err.message);
+    console.error('❌ Database error:', err.message);
   }
 }
 
