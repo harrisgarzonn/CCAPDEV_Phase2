@@ -48,7 +48,7 @@ exports.create = async (req, res) => {
 
         if (!est) {
             const result = await db.run(
-                "INSERT INTO establishments (name, category, description) VALUES ($1, $2, $3)",
+                "INSERT INTO establishments (name, category, description) VALUES ($1, $2, $3) RETURNING id",
                 [establishment, category, '']
             );
             await insertReview(userId, result.lastID, title, body, rating, res);
